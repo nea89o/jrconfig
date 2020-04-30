@@ -21,10 +21,14 @@ public class ConfigurableClass1 {
 Kotlin: 
 ```kotlin 
 val someConfigProp = Config.get<String>("someProp")
+var someOtherOption by Config.get<String>("someOtherOption")
+
 
 fun main() {
     Config.use(FilePropertiesProvider.create("config.properties"))
     println(someConfigProp.get())
+    println(someOtherOption)
+    someOtherOption = "lul"
 }
 ```
 
@@ -59,7 +63,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.romangraef", "jrconfig", "v0.3")
+    implementation("com.github.romangraef", "jrconfig", "v0.4")
 }
 ```
 The version can be either a git shortref, or a [tag](https://github.com/romangraef/jrconfig/tags).
