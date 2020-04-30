@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.romangraef", "jrconfig", "v1.0")
+    implementation("com.github.romangraef", "jrconfig", "v0.3")
 }
 ```
 The version can be either a git shortref, or a [tag](https://github.com/romangraef/jrconfig/tags).
