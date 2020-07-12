@@ -2,7 +2,7 @@ package com.romangraef.jrconfig
 
 import java.util.function.Function
 
-abstract class TransformerConfigVariable<T>(private val provider: ConfigProvider, private val point: String) :
+abstract class TransformerConfigVariable<T>(private val provider: ConfigSaveLoadProvider, private val point: String) :
     ConfigVariable<T> {
     protected abstract fun transform(value: String): T
     protected abstract fun serialize(data: T): String
@@ -12,16 +12,22 @@ abstract class TransformerConfigVariable<T>(private val provider: ConfigProvider
     }
 
 
-    override fun set(value: T) =
+    override fun set(value: T) {
         provider.setData(point, serialize(value))
+    }
 
+    override fun defaultValue(t: T?): ConfigVariable<T> = if (t == null) {
+        this
+    } else {
+        DefaultConfigVariable(this, t)
+    }
 
     companion object {
         /**
          * Quick and dirty. Please consider using a subclass.
          */
         fun <T> getVariable(
-            provider: ConfigProvider,
+            provider: ConfigSaveLoadProvider,
             point: String,
             transform: Function<String, T>,
             serialize: Function<T, String>

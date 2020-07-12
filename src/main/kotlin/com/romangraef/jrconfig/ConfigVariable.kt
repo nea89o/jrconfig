@@ -7,4 +7,5 @@ interface ConfigVariable<T> {
     fun set(value: T)
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = get()
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = set(value)
+    fun defaultValue(t: T?): ConfigVariable<T>
 }

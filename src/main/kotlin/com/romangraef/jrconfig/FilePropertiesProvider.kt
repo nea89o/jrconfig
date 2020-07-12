@@ -6,7 +6,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 
-class FilePropertiesProvider(private val file: File) : ConfigProvider {
+class FilePropertiesProvider(private val file: File) : ConfigSaveLoadProvider {
     private var properties: Properties = Properties()
 
     init {
@@ -28,17 +28,19 @@ class FilePropertiesProvider(private val file: File) : ConfigProvider {
         return properties.getProperty(point)
     }
 
-    override fun setData(point: String, data: String) {
+    override fun setData(point: String, data: String): Boolean {
         properties.setProperty(point, data)
-        save()
+        return save()
     }
 
-    private fun save() {
+    private fun save(): Boolean {
         try {
             properties.store(FileOutputStream(file), "application config")
+            return true
         } catch (e: IOException) {
             e.printStackTrace()
         }
+        return false
     }
 
 
