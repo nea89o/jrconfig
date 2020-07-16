@@ -10,7 +10,7 @@ object Config {
     private val proxyProvider: ConfigSaveLoadProvider = object : ConfigSaveLoadProvider {
 
         override fun provideData(point: String): String? =
-            configProvider.map { it.provideData(point) }.firstOrNull()
+            configProvider.map { it.provideData(point) }.filterNotNull().firstOrNull()
 
 
         override fun setData(point: String, data: String): Boolean =
