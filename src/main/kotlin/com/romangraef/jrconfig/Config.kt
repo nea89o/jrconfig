@@ -6,6 +6,7 @@ typealias ConfigVariableProvider<T> = (ConfigSaveLoadProvider, String) -> Config
 
 object Config {
     private var configProvider = mutableListOf<ConfigProvider>()
+    private val _usedPoints = mutableListOf<String>()
     private val map: MutableMap<Class<*>, ConfigVariableProvider<*>> = mutableMapOf()
     private val proxyProvider: ConfigSaveLoadProvider = object : ConfigSaveLoadProvider {
 
@@ -27,16 +28,23 @@ object Config {
         map[String::class.java] = ::StringVariable
     }
 
+    /**
+     * A list of all registered points. This list is not necessarily complete.
+     */
+    val usedPoints
+        get() = _usedPoints.toList()
 
     @Suppress("UNCHECKED_CAST")
     @JvmStatic
     fun <T> get(clazz: Class<out T>, point: String): ConfigVariable<T> {
+        _usedPoints.add(point)
         return (map[clazz] as? ConfigVariableProvider<T>)?.invoke(proxyProvider, point)
             ?: throw ConfigMissingProviderException(clazz)
     }
 
     @JvmStatic
     fun <T : Enum<T>> getEnum(enumClass: Class<T>, point: String): ConfigVariable<T> {
+        _usedPoints.add(point)
         return EnumVariable(enumClass, proxyProvider, point)
     }
 
